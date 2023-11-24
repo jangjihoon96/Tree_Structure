@@ -1,0 +1,49 @@
+<script>
+  class Tree {
+    constructor(value) {
+      this.value = value;
+      this.children = [];
+    }
+
+    insertWord(word) {
+      let currentNode = this;
+      for (let char of word) {
+        let found = false;
+
+        for (let child of currentNode.children) {
+          if (child.value === char) {
+            currentNode = child;
+            found = true;
+            break;
+          }
+        }
+
+        if (!found) {
+          const newNode = new Tree(char);
+          currentNode.children.push(newNode);
+          currentNode = newNode;
+        }
+      }
+    }
+
+    insertArrayWords(array) {
+      array.forEach((word) => {
+        this.insertWord(word);
+      });
+    }
+  }
+
+  let tree = new Tree();
+
+  fetch("./originalTreeData.json")
+    .then((res) => res.json())
+    .then((data) => {
+      tree.insertArrayWords(data);
+
+      // tree 구조 콘솔 출력
+      console.log(tree.children);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+</script>
